@@ -1,5 +1,6 @@
 package com.raja.retailstore.controllers;
 
+import com.raja.retailstore.models.Category;
 import com.raja.retailstore.models.Product;
 import com.raja.retailstore.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,16 @@ public class ProductController {
 
     @GetMapping
     public List<Product> getAllProducts(){
-        return new ArrayList<>();
+        return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
     public Product getSingleProduct(@PathVariable("id") Long id) {
         return productService.getSingleProduct(id);
+    }
+
+    @GetMapping("/categories")
+    public List<Category> getAllCategories(){
+        return productService.getAllCategories();
     }
 }
