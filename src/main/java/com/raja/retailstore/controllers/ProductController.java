@@ -4,10 +4,9 @@ import com.raja.retailstore.models.Category;
 import com.raja.retailstore.models.Product;
 import com.raja.retailstore.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -34,8 +33,23 @@ public class ProductController {
         return productService.getSingleProduct(id);
     }
 
-    @GetMapping("/categories")
-    public List<Category> getAllCategories(){
-        return productService.getAllCategories();
+    @PostMapping()
+    public Product addNewProduct(@RequestBody Product product) {
+        return productService.addNewProduct(product);
+    }
+
+    @PatchMapping("/{id}")
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+        return new Product();
+    }
+
+    @PutMapping("/{id}")
+    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+        return new Product();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

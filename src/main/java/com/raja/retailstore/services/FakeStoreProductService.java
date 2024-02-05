@@ -4,8 +4,11 @@ import com.raja.retailstore.dtos.FakeStoreProductDto;
 import com.raja.retailstore.models.Category;
 import com.raja.retailstore.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpMessageConverterExtractor;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -55,15 +58,33 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        ResponseEntity<Category[]> responseEntity = restTemplate.getForEntity("https://fakestoreapi.com/products/categories",
-                Category[].class
-                );
-        Category[] categoryArray = responseEntity.getBody();
-        List<Category> categories = new ArrayList<>();
-        for(Category category: categoryArray){
-            categories.add(category);
-        }
-        return categories;
+    public Product updateProduct(Long id, Product product) {
+        return null;
+    }
+
+    @Override
+    public Product replaceProduct(Long id, Product product) {
+        FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
+        fakeStoreProductDto.setTitle(product.getTitle());
+        fakeStoreProductDto.setPrice(product.getPrice());
+        fakeStoreProductDto.setImage(product.getDescription());
+        fakeStoreProductDto.setImage(product.getImageUrl());
+
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(fakeStoreProductDto, FakeStoreProductDto.class);
+        HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor =
+                new HttpMessageConverterExtractor<>(FakeStoreProductDto.class, restTemplate.getMessageConverters());
+        FakeStoreProductDto response = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.PUT, requestCallback, responseExtractor);
+
+        return convertFakeStoreProductToProduct(response);
+    }
+
+    @Override
+    public Product addNewProduct(Product product) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteProduct(Long id) {
+        return false;
     }
 }
